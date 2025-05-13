@@ -1,13 +1,13 @@
 const express = require("express");
 const app = express();
 const { exec, execSync } = require('child_process');
-const port = process.env.SERVER_PORT || process.env.PORT || 3000;        
-const UUID = process.env.UUID || '986e0d08-b275-4dd3-9e75-f3094b36fa2a'; //若需要改UUID，需要在config.json里改为一致
+const port = process.env.SERVER_PORT || process.env.PORT || 5000;        
+const UUID = process.env.UUID || 'cfe9a69e-4d96-446d-b1e2-9c467d8d2049'; //若需要改UUID，需要在config.json里改为一致
 const NEZHA_SERVER = process.env.NEZHA_SERVER || 'nz.f4i.cn';     
 const NEZHA_PORT = process.env.NEZHA_PORT || '5555';                     // 哪吒端口为{443,8443,2096,2087,2083,2053}其中之一开启tls
 const NEZHA_KEY = process.env.NEZHA_KEY || '5ddVS93Eq0Uc9he880';
-const ARGO_DOMAIN = process.env.ARGO_DOMAIN || 'choreo.zzx.free.hr';     // 建议使用token，argo端口8080，cf后台设置需对应,使用json需上传json和yml文件至files目录
-const ARGO_AUTH = process.env.ARGO_AUTH || 'eyJhIjoiOGI5NzI0MDgwZTU1ZTcwMzcwZmI3NDI4NzkyMmYzMWIiLCJ0IjoiOGNlY2VlYzQtYzZiNi00N2VkLThhZjItY2I4MThmMDkxZWJkIiwicyI6Ik5XWTFNV1ZsWm1NdFpEYzJZeTAwWkdSaExUbGtZall0TnpneVpqZ3haVE00WkRBNSJ9';
+const ARGO_DOMAIN = process.env.ARGO_DOMAIN || 'choreo1.enthusiasm.eu.org';     // 建议使用token，argo端口8080，cf后台设置需对应,使用json需上传json和yml文件至files目录
+const ARGO_AUTH = process.env.ARGO_AUTH || 'eyJhIjoiZDNhY2U1Y2MxNGIxZWYxYjYwZDMwYTAwMjBkNWY0NWUiLCJ0IjoiODE2NGZkZTAtMTZkZi00NDQyLTllZTYtYzVmMmE1OTgyMzIxIiwicyI6Ik0yUXdNemM0TjJVdFlXVmlNaTAwTlRRMUxXRTNZamt0TUdJMVpHUTNNVE5qTXpFMiJ9';
 const CFIP = process.env.CFIP || 'na.ma';
 const NAME = process.env.NAME || 'Choreo';
 
@@ -24,10 +24,10 @@ const ISP = metaInfo.trim();
 
 // sub subscription
 app.get('/sub', (req, res) => {
-  const VMESS = { v: '2', ps: `${NAME}-${ISP}`, add: CFIP, port: '8443', id: UUID, aid: '0', scy: 'none', net: 'ws', type: 'none', host: ARGO_DOMAIN, path: '/vmess?ed=2048', tls: 'tls', sni: ARGO_DOMAIN, alpn: '' };
-  const vlessURL = `vless://${UUID}@${CFIP}:8443?encryption=none&security=tls&sni=${ARGO_DOMAIN}&type=ws&host=${ARGO_DOMAIN}&path=%2Fvless?ed=2048#${NAME}-${ISP}`;
+  const VMESS = { v: '2', ps: `${NAME}-${ISP}`, add: CFIP, port: '443', id: UUID, aid: '0', scy: 'none', net: 'ws', type: 'none', host: ARGO_DOMAIN, path: '/vmess?ed=2048', tls: 'tls', sni: ARGO_DOMAIN, alpn: '' };
+  const vlessURL = `vless://${UUID}@${CFIP}:443?encryption=none&security=tls&sni=${ARGO_DOMAIN}&type=ws&host=${ARGO_DOMAIN}&path=%2Fvless?ed=2048#${NAME}-${ISP}`;
   const vmessURL = `vmess://${Buffer.from(JSON.stringify(VMESS)).toString('base64')}`;
-  const trojanURL = `trojan://${UUID}@${CFIP}:8443?security=tls&sni=${ARGO_DOMAIN}&type=ws&host=${ARGO_DOMAIN}&path=%2Ftrojan?ed=2048#${NAME}-${ISP}`;
+  const trojanURL = `trojan://${UUID}@${CFIP}:443?security=tls&sni=${ARGO_DOMAIN}&type=ws&host=${ARGO_DOMAIN}&path=%2Ftrojan?ed=2048#${NAME}-${ISP}`;
   
   const base64Content = Buffer.from(`${vlessURL}\n\n${vmessURL}\n\n${trojanURL}`).toString('base64');
 
